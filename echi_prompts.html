@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sentence Display with Countdown</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      }
+      .container {
+        text-align: center;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      #sentence {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        color: #333333;
+      }
+      #timer {
+        font-size: 3em;
+        margin-bottom: 20px;
+        color: #333333;
+      }
+      #nextButton {
+        padding: 10px 20px;
+        font-size: 1em;
+        color: #ffffff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      #nextButton:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="sentence">Press "Next Sentence" to start.</div>
+      <div id="timer">06:00</div>
+      <button id="nextButton" onclick="nextSentence()">Next Sentence</button>
+    </div>
+
+    <script>
+      const sentences = [
+        "The quick brown fox jumps over the lazy dog.",
+        "A journey of a thousand miles begins with a single step.",
+        "To be or not to be, that is the question.",
+        "All that glitters is not gold.",
+        "The only thing we have to fear is fear itself.",
+      ];
+      let currentSentenceIndex =
+        parseInt(localStorage.getItem("currentSentenceIndex")) || 0;
+      let countdown;
+      const countdownDuration = 6 * 60; // 6 minutes in seconds
+
+      function startTimer(duration) {
+        let timer = duration,
+          minutes,
+          seconds;
+        const timerElement = document.getElementById("timer");
+        clearInterval(countdown);
+        countdown = setInterval(() => {
+          minutes = Math.floor(timer / 60);
+          seconds = timer % 60;
+
+          minutes = minutes < 10 ? "0" + minutes : minutes;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+
+          timerElement.textContent = `${minutes}:${seconds}`;
+
+          if (--timer < 0) {
+            clearInterval(countdown);
+            timerElement.style.color = "red";
+          }
+        }, 1000);
+      }
+
+      function nextSentence() {
+        if (currentSentenceIndex >= sentences.length) {
+          currentSentenceIndex = 0;
+        }
+        document.getElementById("sentence").textContent =
+          sentences[currentSentenceIndex++];
+        document.getElementById("timer").style.color = "#333333";
+        startTimer(countdownDuration);
+        localStorage.setItem("currentSentenceIndex", currentSentenceIndex);
+      }
+
+      window.onload = function () {
+        if (currentSentenceIndex < sentences.length) {
+          document.getElementById("sentence").textContent =
+            sentences[currentSentenceIndex];
+          startTimer(countdownDuration);
+        }
+      };
+    </script>
+  </body>
+</html>
