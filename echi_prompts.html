@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Sentence Display with Countdown</title>
+    <title>Conversation Preparation</title>
     <style>
       body {
         font-family: "Arial", sans-serif;
@@ -19,6 +19,38 @@
         padding: 30px;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 20px;
+      }
+      #passage {
+        font-size: 1.1em;
+        line-height: 1.6;
+        margin-bottom: 30px;
+        color: #444;
+        text-align: left;
+      }
+      #passage h2 {
+        color: #007bff;
+        margin-top: 0;
+      }
+      #startButton,
+      #nextButton {
+        padding: 10px 20px;
+        font-size: 1em;
+        color: #ffffff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+      }
+      #startButton:hover,
+      #nextButton:hover {
+        background-color: #0056b3;
+      }
+      #promptContainer {
+        display: none;
       }
       #sentence {
         font-size: 1.5em;
@@ -30,29 +62,43 @@
         margin-bottom: 20px;
         color: #333333;
       }
-      #nextButton {
-        padding: 10px 20px;
-        font-size: 1em;
-        color: #ffffff;
-        background-color: #007bff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-      #nextButton:hover {
-        background-color: #0056b3;
-      }
     </style>
   </head>
   <body>
     <div class="container">
-      <div id="sentence">Press "Next Sentence" to start.</div>
-      <div id="timer">06:00</div>
-      <button id="nextButton" onclick="nextSentence()">Next Sentence</button>
+      <div id="passage">
+        <h2>Please read the passage below</h2>
+        <p>
+          When the sunlight strikes raindrops in the air, they act as a prism
+          and form a rainbow. The rainbow is a division of white light into many
+          beautiful colors. These take the shape of a long round arch, with its
+          path high above, and its two ends apparently beyond the horizon. There
+          is , according to legend, a boiling pot of gold at one end. People
+          look, but no one ever finds it. When a man looks for something beyond
+          his reach, his friends say he is looking for the pot of gold at the
+          end of the rainbow.
+        </p>
+        <p>
+          Throughout the centuries people have explained the rainbow in various
+          ways. Some have accepted it as a miracle without physical explanation.
+          To the Hebrews it was a token that there would be no more universal
+          floods. The Greeks used to imagine that it was a sign from the gods to
+          foretell war or heavy rain. The Norsemen considered the rainbow as a
+          bridge over which the gods passed from earth to their home in the sky.
+          Others have tried to explain the phenomenon physically.
+        </p>
+        <button id="startButton" onclick="startPrompts()">Proceed...</button>
+      </div>
+
+      <div id="promptContainer">
+        <p id="sentence">Press "Next Sentence" to start.</p>
+        <p id="timer">06:00</p>
+        <button id="nextButton" onclick="nextSentence()">Next Sentence</button>
+      </div>
     </div>
 
     <script>
+      // Conversation prompts
       const sentences = [
         "The quick brown fox jumps over the lazy dog.",
         "A journey of a thousand miles begins with a single step.",
@@ -64,6 +110,20 @@
         parseInt(localStorage.getItem("currentSentenceIndex")) || 0;
       let countdown;
       const countdownDuration = 6 * 60; // 6 minutes in seconds
+
+      function startPrompts() {
+        document.getElementById("passage").style.display = "none";
+        document.getElementById("promptContainer").style.display = "block";
+
+        if (currentSentenceIndex === 0) {
+          document.getElementById("sentence").textContent =
+            sentences[currentSentenceIndex];
+          startTimer(countdownDuration); // Start timer on first sentence
+        } else {
+          document.getElementById("sentence").textContent =
+            sentences[currentSentenceIndex];
+        }
+      }
 
       function startTimer(duration) {
         let timer = duration,
@@ -97,14 +157,6 @@
         startTimer(countdownDuration);
         localStorage.setItem("currentSentenceIndex", currentSentenceIndex);
       }
-
-      window.onload = function () {
-        if (currentSentenceIndex < sentences.length) {
-          document.getElementById("sentence").textContent =
-            sentences[currentSentenceIndex];
-          startTimer(countdownDuration);
-        }
-      };
     </script>
   </body>
 </html>
