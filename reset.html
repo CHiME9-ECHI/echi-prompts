@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reset Prompt Index</title>
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        }
+        .container {
+            text-align: center;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #ffffff;
+            background-color: #ff4c4c;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Reset Prompt Index</h2>
+        <p>Click the button below to reset the prompt index to 0.</p>
+        <button onclick="resetPromptIndex()">Reset Index</button>
+        <p id="status"></p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAHicQSrOLtnRDxUiWI_VSuEQvLdh-QtPs",
+            authDomain: "echi-prompts.firebaseapp.com",
+            databaseURL: "https://echi-prompts-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "echi-prompts",
+            storageBucket: "echi-prompts.firebasestorage.app",
+            messagingSenderId: "519393914993",
+            appId: "1:519393914993:web:19b3405da27e7352ac2bd0",
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        function resetPromptIndex() {
+            set(ref(db, "users/guest/promptIndex"), 0)
+                .then(() => {
+                    document.getElementById("status").innerText = "✅ Prompt index reset to 0.";
+                })
+                .catch((error) => {
+                    document.getElementById("status").innerText = "❌ Error resetting index.";
+                    console.error("Error:", error);
+                });
+        }
+
+        window.resetPromptIndex = resetPromptIndex;
+    </script>
+</body>
+</html>

@@ -32,8 +32,7 @@
         line-height: 1.6;
         margin-bottom: 30px;
         color: #444;
-        text-align: left;
-        display: block; /* Show passage by default */
+        display: block;
       }
       #passage h2 {
         color: #007bff;
@@ -66,20 +65,18 @@
         font-size: 3em;
         margin-bottom: 20px;
         color: #333333;
-        display: none; /* Hide timer initially */
+        display: none;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <!-- Passage Screen -->
       <div id="passage">
         <h2>Please read the passage below</h2>
         <p id="passageText">Loading passage...</p>
         <button id="startButton" onclick="showStartScreen()">Proceed...</button>
       </div>
 
-      <!-- Start Screen (New Screen after Passage) -->
       <div id="startScreen">
         <h2>Get Ready to Begin</h2>
         <p>
@@ -90,7 +87,6 @@
         </button>
       </div>
 
-      <!-- Prompt Screen -->
       <div id="promptContainer">
         <p id="prompt">Press "Show First Prompt" to start.</p>
         <p id="timer">06:00</p>
@@ -98,84 +94,117 @@
       </div>
     </div>
 
-    <script>
-      let prompts = []; // Array to store loaded prompts
-      let currentPromptIndex =
-        parseInt(localStorage.getItem("currentPromptIndex")) || 0;
-      const countdownDuration = 6 * 60; // 6 minutes in seconds
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        get,
+        set,
+      } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-database.js";
+
+      // ✅ Global Variables
+      let prompts = [];
+      let currentPromptIndex = 0;
       let countdown;
 
-      // Function to load the passage from passage.txt
-      async function loadPassage() {
+      const firebaseConfig = {
+        apiKey: "AIzaSyAHicQSrOLtnRDxUiWI_VSuEQvLdh-QtPs",
+        authDomain: "echi-prompts.firebaseapp.com",
+        databaseURL:
+          "https://echi-prompts-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "echi-prompts",
+        storageBucket: "echi-prompts.firebasestorage.app",
+        messagingSenderId: "519393914993",
+        appId: "1:519393914993:web:19b3405da27e7352ac2bd0",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      console.log("✅ Firebase initialized and database ready!");
+
+      async function loadPromptIndex() {
         try {
-          const response = await fetch("passage.txt");
-          if (!response.ok) {
-            throw new Error("Failed to load passage.");
-          }
-          const text = await response.text();
-          document.getElementById("passageText").innerHTML = text;
+          const snapshot = await get(ref(db, "users/guest/promptIndex"));
+          return snapshot.exists() ? snapshot.val() : 0;
         } catch (error) {
-          document.getElementById("passageText").innerHTML =
-            "<p style='color:red;'>Error loading passage.</p>";
-          console.error("Error loading passage:", error);
+          console.error("❌ Firebase Database Error:", error);
+          return 0;
         }
       }
 
-      // Function to load prompts from prompts.txt
+      function savePromptIndex(index) {
+        set(ref(db, "users/guest/promptIndex"), index)
+          .then(() => console.log("✅ Saved prompt index:", index))
+          .catch((error) =>
+            console.error("❌ Error saving prompt index:", error)
+          );
+      }
+
+      async function loadPassage() {
+        try {
+          const response = await fetch("passage.txt");
+          if (!response.ok) throw new Error("Failed to load passage.");
+          const text = await response.text();
+          document.getElementById("passageText").innerHTML = text;
+          document.getElementById("passage").style.display = "block";
+        } catch (error) {
+          console.error("❌ Error loading passage:", error);
+          document.getElementById("passageText").innerHTML =
+            "<p style='color:red;'>Error loading passage.</p>";
+        }
+      }
+
       async function loadPrompts() {
         try {
           const response = await fetch("prompts.txt");
-          if (!response.ok) {
-            throw new Error("Failed to load prompts.");
-          }
+          if (!response.ok) throw new Error("Failed to load prompts.");
           const text = await response.text();
-
-          // Split by new lines, remove empty lines
           prompts = text
             .split("\n")
             .map((line) => line.trim())
             .filter((line) => line);
+          if (prompts.length === 0) throw new Error("No prompts found.");
 
-          // Show passage first
-          document.getElementById("passage").style.display = "block";
-          document.getElementById("startScreen").style.display = "none";
-          document.getElementById("promptContainer").style.display = "none";
+          currentPromptIndex = await loadPromptIndex();
+          console.log("✅ Using saved prompt index:", currentPromptIndex);
         } catch (error) {
-          console.error("Error loading prompts:", error);
+          console.error("❌ Error loading prompts:", error);
           document.getElementById("prompt").textContent =
             "Error loading prompts.";
         }
       }
 
-      // Show start screen after passage
       function showStartScreen() {
         document.getElementById("passage").style.display = "none";
         document.getElementById("startScreen").style.display = "block";
       }
 
-      // Start prompts (hide start screen, show first prompt)
       function startPrompts() {
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("promptContainer").style.display = "block";
-
-        // Move to the NEXT prompt on page revisit
         currentPromptIndex = (currentPromptIndex + 1) % prompts.length;
-        localStorage.setItem("currentPromptIndex", currentPromptIndex);
-
+        savePromptIndex(currentPromptIndex);
         startPromptSession();
       }
 
-      // Starts prompt session
       function startPromptSession() {
         if (prompts.length > 0) {
           document.getElementById("prompt").textContent =
             prompts[currentPromptIndex];
-          document.getElementById("timer").style.display = "block"; // Show timer
-          startTimer(countdownDuration);
+          document.getElementById("timer").style.display = "block";
+          startTimer(360);
         }
       }
 
-      // Timer function
+      function nextPrompt() {
+        currentPromptIndex = (currentPromptIndex + 1) % prompts.length;
+        document.getElementById("prompt").textContent =
+          prompts[currentPromptIndex];
+        savePromptIndex(currentPromptIndex);
+        startTimer(360);
+      }
+
       function startTimer(duration) {
         let timer = duration;
         const timerElement = document.getElementById("timer");
@@ -184,11 +213,9 @@
         countdown = setInterval(() => {
           let minutes = Math.floor(timer / 60);
           let seconds = timer % 60;
-
           timerElement.textContent = `${minutes
             .toString()
             .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-
           if (--timer < 0) {
             clearInterval(countdown);
             timerElement.style.color = "red";
@@ -196,23 +223,14 @@
         }, 1000);
       }
 
-      // Display next prompt and save position
-      function nextPrompt() {
-        if (prompts.length === 0) return;
-
-        currentPromptIndex = (currentPromptIndex + 1) % prompts.length;
-        document.getElementById("prompt").textContent =
-          prompts[currentPromptIndex];
-
-        startTimer(countdownDuration);
-        localStorage.setItem("currentPromptIndex", currentPromptIndex);
-      }
-
-      // Load passage and prompts on page load
-      window.onload = function () {
-        loadPassage();
-        loadPrompts();
+      window.onload = async function () {
+        await loadPassage();
+        await loadPrompts();
       };
+
+      window.showStartScreen = showStartScreen;
+      window.startPrompts = startPrompts;
+      window.nextPrompt = nextPrompt;
     </script>
   </body>
 </html>
