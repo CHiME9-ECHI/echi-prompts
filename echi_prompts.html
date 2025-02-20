@@ -22,18 +22,25 @@
         max-width: 800px;
         margin: 20px;
       }
+      #passage,
+      #startScreen,
+      #promptContainer {
+        display: none;
+      }
       #passage {
         font-size: 1.1em;
         line-height: 1.6;
         margin-bottom: 30px;
         color: #444;
         text-align: left;
+        display: block; /* Show passage by default */
       }
       #passage h2 {
         color: #007bff;
         margin-top: 0;
       }
       #startButton,
+      #firstPromptButton,
       #nextButton {
         padding: 10px 20px;
         font-size: 1em;
@@ -46,13 +53,11 @@
         margin-top: 20px;
       }
       #startButton:hover,
+      #firstPromptButton:hover,
       #nextButton:hover {
         background-color: #0056b3;
       }
-      #promptContainer {
-        display: none;
-      }
-      #sentence {
+      #prompt {
         font-size: 1.5em;
         margin-bottom: 20px;
         color: #333333;
@@ -61,84 +66,128 @@
         font-size: 3em;
         margin-bottom: 20px;
         color: #333333;
+        display: none; /* Hide timer initially */
       }
     </style>
   </head>
   <body>
     <div class="container">
+      <!-- Passage Screen -->
       <div id="passage">
         <h2>Please read the passage below</h2>
-        <p>
-          When the sunlight strikes raindrops in the air, they act as a prism
-          and form a rainbow. The rainbow is a division of white light into many
-          beautiful colors. These take the shape of a long round arch, with its
-          path high above, and its two ends apparently beyond the horizon. There
-          is , according to legend, a boiling pot of gold at one end. People
-          look, but no one ever finds it. When a man looks for something beyond
-          his reach, his friends say he is looking for the pot of gold at the
-          end of the rainbow.
-        </p>
-        <p>
-          Throughout the centuries people have explained the rainbow in various
-          ways. Some have accepted it as a miracle without physical explanation.
-          To the Hebrews it was a token that there would be no more universal
-          floods. The Greeks used to imagine that it was a sign from the gods to
-          foretell war or heavy rain. The Norsemen considered the rainbow as a
-          bridge over which the gods passed from earth to their home in the sky.
-          Others have tried to explain the phenomenon physically.
-        </p>
-        <button id="startButton" onclick="startPrompts()">Proceed...</button>
+        <p id="passageText">Loading passage...</p>
+        <button id="startButton" onclick="showStartScreen()">Proceed...</button>
       </div>
 
+      <!-- Start Screen (New Screen after Passage) -->
+      <div id="startScreen">
+        <h2>Get Ready to Begin</h2>
+        <p>
+          When you're ready, click the button below to see the first prompt.
+        </p>
+        <button id="firstPromptButton" onclick="startPrompts()">
+          Show First Prompt
+        </button>
+      </div>
+
+      <!-- Prompt Screen -->
       <div id="promptContainer">
-        <p id="sentence">Press "Next Sentence" to start.</p>
+        <p id="prompt">Press "Show First Prompt" to start.</p>
         <p id="timer">06:00</p>
-        <button id="nextButton" onclick="nextSentence()">Next Sentence</button>
+        <button id="nextButton" onclick="nextPrompt()">Show Next Prompt</button>
       </div>
     </div>
 
     <script>
-      // Conversation prompts
-      const sentences = [
-        "The quick brown fox jumps over the lazy dog.",
-        "A journey of a thousand miles begins with a single step.",
-        "To be or not to be, that is the question.",
-        "All that glitters is not gold.",
-        "The only thing we have to fear is fear itself.",
-      ];
-      let currentSentenceIndex =
-        parseInt(localStorage.getItem("currentSentenceIndex")) || 0;
-      let countdown;
+      let prompts = []; // Array to store loaded prompts
+      let currentPromptIndex =
+        parseInt(localStorage.getItem("currentPromptIndex")) || 0;
       const countdownDuration = 6 * 60; // 6 minutes in seconds
+      let countdown;
 
-      function startPrompts() {
-        document.getElementById("passage").style.display = "none";
-        document.getElementById("promptContainer").style.display = "block";
-
-        if (currentSentenceIndex === 0) {
-          document.getElementById("sentence").textContent =
-            sentences[currentSentenceIndex];
-          startTimer(countdownDuration); // Start timer on first sentence
-        } else {
-          document.getElementById("sentence").textContent =
-            sentences[currentSentenceIndex];
+      // Function to load the passage from passage.txt
+      async function loadPassage() {
+        try {
+          const response = await fetch("passage.txt");
+          if (!response.ok) {
+            throw new Error("Failed to load passage.");
+          }
+          const text = await response.text();
+          document.getElementById("passageText").innerHTML = text;
+        } catch (error) {
+          document.getElementById("passageText").innerHTML =
+            "<p style='color:red;'>Error loading passage.</p>";
+          console.error("Error loading passage:", error);
         }
       }
 
+      // Function to load prompts from prompts.txt
+      async function loadPrompts() {
+        try {
+          const response = await fetch("prompts.txt");
+          if (!response.ok) {
+            throw new Error("Failed to load prompts.");
+          }
+          const text = await response.text();
+
+          // Split by new lines, remove empty lines
+          prompts = text
+            .split("\n")
+            .map((line) => line.trim())
+            .filter((line) => line);
+
+          // Show passage first
+          document.getElementById("passage").style.display = "block";
+          document.getElementById("startScreen").style.display = "none";
+          document.getElementById("promptContainer").style.display = "none";
+        } catch (error) {
+          console.error("Error loading prompts:", error);
+          document.getElementById("prompt").textContent =
+            "Error loading prompts.";
+        }
+      }
+
+      // Show start screen after passage
+      function showStartScreen() {
+        document.getElementById("passage").style.display = "none";
+        document.getElementById("startScreen").style.display = "block";
+      }
+
+      // Start prompts (hide start screen, show first prompt)
+      function startPrompts() {
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("promptContainer").style.display = "block";
+
+        // Move to the NEXT prompt on page revisit
+        currentPromptIndex = (currentPromptIndex + 1) % prompts.length;
+        localStorage.setItem("currentPromptIndex", currentPromptIndex);
+
+        startPromptSession();
+      }
+
+      // Starts prompt session
+      function startPromptSession() {
+        if (prompts.length > 0) {
+          document.getElementById("prompt").textContent =
+            prompts[currentPromptIndex];
+          document.getElementById("timer").style.display = "block"; // Show timer
+          startTimer(countdownDuration);
+        }
+      }
+
+      // Timer function
       function startTimer(duration) {
-        let timer = duration,
-          minutes,
-          seconds;
+        let timer = duration;
         const timerElement = document.getElementById("timer");
         clearInterval(countdown);
+
         countdown = setInterval(() => {
-          minutes = Math.floor(timer / 60);
-          seconds = timer % 60;
+          let minutes = Math.floor(timer / 60);
+          let seconds = timer % 60;
 
-          minutes = minutes < 10 ? "0" + minutes : minutes;
-          seconds = seconds < 10 ? "0" + seconds : seconds;
-
-          timerElement.textContent = `${minutes}:${seconds}`;
+          timerElement.textContent = `${minutes
+            .toString()
+            .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 
           if (--timer < 0) {
             clearInterval(countdown);
@@ -147,16 +196,23 @@
         }, 1000);
       }
 
-      function nextSentence() {
-        if (currentSentenceIndex >= sentences.length) {
-          currentSentenceIndex = 0;
-        }
-        document.getElementById("sentence").textContent =
-          sentences[currentSentenceIndex++];
-        document.getElementById("timer").style.color = "#333333";
+      // Display next prompt and save position
+      function nextPrompt() {
+        if (prompts.length === 0) return;
+
+        currentPromptIndex = (currentPromptIndex + 1) % prompts.length;
+        document.getElementById("prompt").textContent =
+          prompts[currentPromptIndex];
+
         startTimer(countdownDuration);
-        localStorage.setItem("currentSentenceIndex", currentSentenceIndex);
+        localStorage.setItem("currentPromptIndex", currentPromptIndex);
       }
+
+      // Load passage and prompts on page load
+      window.onload = function () {
+        loadPassage();
+        loadPrompts();
+      };
     </script>
   </body>
 </html>
