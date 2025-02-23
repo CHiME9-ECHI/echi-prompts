@@ -445,3 +445,471 @@ The generated prompts are as follows:
 198. What type of collaborative decision-making process should we implement?
 199. If we had to choose one form of group reflection to practice, what should it be?
 200. What should be our group's ultimate goal for the next six months?
+
+"Generate a list of 300 unique conversation prompts designed to stimulate a discussion between four people. Each prompt should be completely self-contained, suitable for all ages, and avoid controversial or triggering topics. The prompts should encourage the group to come to a consensus decision on a fun, creative, or practical topic. Avoid organizing the prompts by theme, and ensure that each stands alone.
+
+Good examples include:
+
+- Can you design a three-course dinner menu exclusively with dishes none of you like?
+- If you could travel together in time and space, can you agree on where you would go and who you would like to meet?
+- If you looked at the overall picture, could you agree on a European country (other than the UK) that you would all like to settle down in?
+- Big or small, agree on which city in the UK is loveliest in summer and which city is loveliest in winter?
+- If you were to invent a fun and new primary-school subject together, what would it be?
+- If you were to choose a hobby, not limited to sports, that all of you were to do the rest of your lives, what would it be?
+- If you were forced to watch the same movie together 5 times in a row, what movie would it be?
+- Can you find a film that almost everyone has seen, none of you have not seen?
+- If each of you had to pick one dish to eat for the rest of your life, what would it be?
+- Can you agree on one thing that is you all have a hard time eating up after taking a few bites?
+- If you had to agree on something you should eat every day for a month, what would it be?
+
+The prompts should cover a wide variety of topics, such as activities, travel, group decisions, games, and creative ideas, ensuring they stay engaging and versatile."
+
+Claude 3.5 (stopped at 224 due to response length limit):
+
+1. If your group had to start a small business together, what type of business would you all agree on?
+
+2. Design a perfect sandwich that all of you would enjoy eating, considering everyone's preferences and dietary restrictions.
+
+3. If you had to choose one board game to play together every weekend for a year, which would you select?
+
+4. Create a new ice cream flavor that combines elements everyone in the group would enjoy.
+
+5. If you could establish a new public holiday, what would it celebrate and what traditions would it include?
+
+6. Design an ideal shared living space that accommodates everyone's must-have features.
+
+7. If your group had to perform at a talent show, what kind of act would you create together?
+
+8. Plan a perfect day trip that includes activities everyone would enjoy.
+
+9. If you had to choose one breakfast food to eat together every morning, what would it be?
+
+10. Design a treehouse that includes features each person considers essential.
+
+11. If your group could adopt a mascot animal (real or mythical), which would you choose?
+
+12. Create a new pizza topping combination that everyone would be willing to try.
+
+13. If you had to choose one mode of transportation for all future group outings, what would it be?
+
+14. Design a group costume theme that everyone would be comfortable wearing.
+
+15. If you could invent a new sport together, what elements would it include?
+
+16. Plan a movie marathon where each person gets to pick one film - can you agree on the viewing order?
+
+17. Create a new milkshake flavor that combines everyone's favorite ingredients.
+
+18. If your group had to learn one new skill together, what would you choose?
+
+19. Design a garden that includes plants each person wants to grow.
+
+20. If you could create a new tradition for your group, what would it be?
+
+21. Plan a picnic menu that includes something special for each person.
+
+22. If you had to choose one song to be your group's anthem, what would it be?
+
+23. Design a playground that includes features everyone would enjoy.
+
+24. If your group had to cook dinner together, what dish would you prepare?
+
+25. Create a new board game that incorporates elements everyone finds fun.
+
+26. If you had to choose one place to meet up every week, where would it be?
+
+27. Design a group flag that represents something meaningful to each person.
+
+28. If you could invent a new dessert together, what would it include?
+
+29. Plan a scavenger hunt that everyone would find engaging.
+
+30. If your group had to wear matching outfits, what style would you choose?
+
+31. Create a new flavor of potato chips that everyone would want to try.
+
+32. If you had to choose one type of weather for all your future gatherings, what would it be?
+
+33. Design a perfect park that includes activities for everyone.
+
+34. If your group had to start a YouTube channel, what content would you create?
+
+35. Plan a weekend activity schedule that makes everyone happy.
+
+36. If you could design a new candy bar, what ingredients would you include?
+
+37. Create a group playlist where everyone agrees on every song.
+
+38. If you had to choose one restaurant type for all future group meals, what cuisine would it be?
+
+39. Design a perfect vacation home that satisfies everyone's needs.
+
+40. If your group had to perform a scene from any movie, which would you choose?
+
+41. Create a new smoothie recipe that everyone would drink.
+
+42. If you had to pick one game to play at every gathering, what would it be?
+
+43. Design a perfect birthday celebration that everyone would enjoy.
+
+44. If your group had to write a children's book together, what would it be about?
+
+45. Plan a perfect afternoon tea menu that includes everyone's favorites.
+
+46. If you could design a new theme park ride, what elements would you include?
+
+47. Create a new type of sandwich that combines everyone's preferred ingredients.
+
+48. If your group had to choose one hobby to pursue together, what would it be?
+
+49. Design a perfect study space that works for everyone.
+
+50. If you had to choose one season for all future group activities, which would it be?
+
+51. Create a new type of pasta dish that everyone would enjoy.
+
+52. If your group had to start a podcast, what would be the theme?
+
+53. Design a perfect camping trip that includes activities for everyone.
+
+54. If you had to choose one type of music for all group gatherings, what genre would it be?
+
+55. Create a new type of cookie that combines everyone's favorite flavors.
+
+56. If your group had to choose one superpower to share, what would it be?
+
+57. Design a perfect game room that includes something for everyone.
+
+58. If you had to pick one type of art project to do together, what would it be?
+
+59. Create a new type of breakfast cereal that everyone would eat.
+
+60. If your group had to choose one holiday to celebrate together, which would it be?
+
+61. Design a perfect outdoor space that accommodates everyone's interests.
+
+62. If you had to create a new type of soup, what ingredients would you include?
+
+63. Plan a perfect movie night that satisfies everyone's preferences.
+
+64. If your group had to choose one type of exercise to do together, what would it be?
+
+65. Create a new type of beverage that everyone would enjoy.
+
+66. If you had to design a new type of furniture, what features would it have?
+
+67. Plan a perfect group photo theme that makes everyone comfortable.
+
+68. If your group had to choose one type of pet to care for together, what would it be?
+
+69. Design a perfect study schedule that works for everyone.
+
+70. If you had to create a new type of snack food, what would it be?
+
+71. Plan a perfect game night that includes everyone's favorite elements.
+
+72. If your group had to choose one type of dance to learn together, what would it be?
+
+73. Create a new type of salad that everyone would eat.
+
+74. If you had to design a new type of shoe, what features would it include?
+
+75. Plan a perfect group costume theme that everyone agrees on.
+
+76. If your group had to choose one type of book to read together, what genre would it be?
+
+77. Design a perfect workout routine that works for everyone.
+
+78. If you had to create a new type of vegetable dish, what would it include?
+
+79. Plan a perfect karaoke night with songs everyone would sing.
+
+80. If your group had to choose one type of craft to make together, what would it be?
+
+81. Create a new type of burger that satisfies everyone's taste.
+
+82. If you had to design a new type of bag, what features would it have?
+
+83. Plan a perfect group hiking trail that everyone could manage.
+
+84. If your group had to choose one type of movie to watch together, what genre would it be?
+
+85. Design a perfect morning routine that works for everyone.
+
+86. If you had to create a new type of sandwich spread, what would it be?
+
+87. Plan a perfect group celebration that includes everyone's must-haves.
+
+88. If your group had to choose one type of musical instrument to learn, what would it be?
+
+89. Create a new type of taco filling that everyone would enjoy.
+
+90. If you had to design a new type of hat, what style would it be?
+
+91. Plan a perfect group volunteer activity that everyone supports.
+
+92. If your group had to choose one type of puzzle to solve together, what would it be?
+
+93. Design a perfect study group format that helps everyone learn.
+
+94. If you had to create a new type of dip, what ingredients would you use?
+
+95. Plan a perfect group fitness challenge that everyone can participate in.
+
+96. If your group had to choose one type of art style to practice, what would it be?
+
+97. Create a new type of fruit salad that everyone would eat.
+
+98. If you had to design a new type of jacket, what features would it have?
+
+99. Plan a perfect group meditation session that works for everyone.
+
+100. If your group had to choose one type of card game to play, what would it be?
+
+101. Design a perfect group project that utilizes everyone's skills.
+
+102. If you had to create a new type of hot drink, what would it include?
+
+103. Plan a perfect group photography theme that everyone enjoys.
+
+104. If your group had to choose one type of science experiment to conduct, what would it be?
+
+105. Create a new type of wrap sandwich that everyone would eat.
+
+106. If you had to design a new type of backpack, what features would it include?
+
+107. Plan a perfect group drawing activity that everyone can participate in.
+
+108. If your group had to choose one type of video game to play together, what would it be?
+
+109. Design a perfect group presentation format that works for everyone.
+
+110. If you had to create a new type of rice dish, what would it include?
+
+111. Plan a perfect group writing project that everyone contributes to.
+
+112. If your group had to choose one type of outdoor game to play, what would it be?
+
+113. Create a new type of pancake recipe that everyone would enjoy.
+
+114. If you had to design a new type of phone case, what would it look like?
+
+115. Plan a perfect group cooking challenge that everyone can handle.
+
+116. If your group had to choose one type of poetry to write together, what style would it be?
+
+117. Design a perfect group debate topic that everyone finds interesting.
+
+118. If you had to create a new type of trail mix, what would it contain?
+
+119. Plan a perfect group music playlist that satisfies everyone's taste.
+
+120. If your group had to choose one type of DIY project to work on, what would it be?
+
+121. Create a new type of pasta sauce that everyone would like.
+
+122. If you had to design a new type of water bottle, what features would it have?
+
+123. Plan a perfect group meditation space that works for everyone.
+
+124. If your group had to choose one type of dance style to perform, what would it be?
+
+125. Design a perfect group Halloween costume theme everyone agrees on.
+
+126. If you had to create a new type of frozen dessert, what would it be?
+
+127. Plan a perfect group reading list that interests everyone.
+
+128. If your group had to choose one type of craft supply to work with, what would it be?
+
+129. Create a new type of pizza sauce that everyone would enjoy.
+
+130. If you had to design a new type of desk organizer, what would it include?
+
+131. Plan a perfect group art exhibition theme that everyone supports.
+
+132. If your group had to choose one type of board game mechanic, what would it be?
+
+133. Design a perfect group exercise routine that works for everyone.
+
+134. If you had to create a new type of sandwich cookie, what would it be?
+
+135. Plan a perfect group podcast episode that everyone participates in.
+
+136. If your group had to choose one type of musical genre to perform, what would it be?
+
+137. Create a new type of vegetable side dish that everyone would eat.
+
+138. If you had to design a new type of lunch box, what features would it have?
+
+139. Plan a perfect group gardening project that everyone can maintain.
+
+140. If your group had to choose one type of party game to play, what would it be?
+
+141. Design a perfect group study guide that helps everyone learn.
+
+142. If you had to create a new type of juice blend, what would it include?
+
+143. Plan a perfect group dance routine that everyone can perform.
+
+144. If your group had to choose one type of craft project to sell, what would it be?
+
+145. Create a new type of breakfast sandwich that everyone would enjoy.
+
+146. If you had to design a new type of calendar system, what would it include?
+
+147. Plan a perfect group poetry slam that everyone participates in.
+
+148. If your group had to choose one type of photography style, what would it be?
+
+149. Design a perfect group workout space that works for everyone.
+
+150. If you had to create a new type of energy bar, what would it contain?
+
+151. Plan a perfect group storytelling session that everyone contributes to.
+
+152. If your group had to choose one type of meditation technique, what would it be?
+
+153. Create a new type of appetizer that everyone would enjoy.
+
+154. If you had to design a new type of planner, what features would it have?
+
+155. Plan a perfect group science project that everyone finds interesting.
+
+156. If your group had to choose one type of drawing style, what would it be?
+
+157. Design a perfect group cookbook that includes everyone's recipes.
+
+158. If you had to create a new type of tea blend, what would it include?
+
+159. Plan a perfect group music video that everyone participates in.
+
+160. If your group had to choose one type of writing genre, what would it be?
+
+161. Create a new type of protein shake that everyone would drink.
+
+162. If you had to design a new type of exercise equipment, what would it be?
+
+163. Plan a perfect group talent show act that showcases everyone.
+
+164. If your group had to choose one type of painting technique, what would it be?
+
+165. Design a perfect group newsletter that everyone contributes to.
+
+166. If you had to create a new type of granola, what would it contain?
+
+167. Plan a perfect group comedy sketch that everyone performs in.
+
+168. If your group had to choose one type of puzzle to create, what would it be?
+
+169. Create a new type of cold drink that everyone would enjoy.
+
+170. If you had to design a new type of storage solution, what would it include?
+
+171. Plan a perfect group magic show that everyone participates in.
+
+172. If your group had to choose one type of origami to master, what would it be?
+
+173. Design a perfect group vision board that represents everyone.
+
+174. If you had to create a new type of muffin recipe, what would it include?
+
+175. Plan a perfect group dance competition that everyone enters.
+
+176. If your group had to choose one type of DIY decoration, what would it be?
+
+177. Create a new type of yogurt parfait that everyone would eat.
+
+178. If you had to design a new type of travel accessory, what would it be?
+
+179. Plan a perfect group improvisation game that everyone plays.
+
+180. If your group had to choose one type of sculpture medium, what would it be?
+
+181. Design a perfect group schedule that works for everyone.
+
+182. If you had to create a new type of protein bowl, what would it include?
+
+183. Plan a perfect group music lesson that everyone enjoys.
+
+184. If your group had to choose one type of journaling style, what would it be?
+
+185. Create a new type of frozen yogurt flavor that everyone would like.
+
+186. If you had to design a new type of desk setup, what would it include?
+
+187. Plan a perfect group mindfulness activity that everyone practices.
+
+188. If your group had to choose one type of knitting project, what would it be?
+
+189. Design a perfect group website that represents everyone.
+
+190. If you had to create a new type of power bowl, what would it contain?
+
+191. Plan a perfect group dance workshop that everyone attends.
+
+192. If your group had to choose one type of pottery to make, what would it be?
+
+193. Create a new type of summer drink that everyone would enjoy.
+
+194. If you had to design a new type of workout gear, what would it include?
+
+195. Plan a perfect group art therapy session that everyone participates in.
+
+196. If your group had to choose one type of collage style, what would it be?
+
+197. Design a perfect group manifesto that everyone believes in.
+
+198. If you had to create a new type of breakfast bowl, what would it include?
+
+199. Plan a perfect group meditation retreat that everyone attends.
+
+200. If your group had to choose one type of weaving project, what would it be?
+
+201. Create a new type of dinner roll that everyone would eat.
+
+202. If you had to design a new type of study tool, what would it include?
+
+203. Plan a perfect group poetry workshop that everyone enjoys.
+
+204. If your group had to choose one type of paper craft, what would it be?
+
+205. Design a perfect group mission statement that everyone supports.
+
+206. If you had to create a new type of smoothie bowl, what would it contain?
+
+207. Plan a perfect group drum circle that everyone joins.
+
+208. If your group had to choose one type of basket weaving, what would it be?
+
+209. Create a new type of winter drink that everyone would enjoy.
+
+210. If you had to design a new type of meditation cushion, what would it include?
+
+211. Plan a perfect group painting session that everyone participates in.
+
+212. If your group had to choose one type of embroidery style, what would it be?
+
+213. Design a perfect group logo that represents everyone.
+
+214. If you had to create a new type of overnight oats, what would it include?
+
+215. Plan a perfect group yoga class that everyone attends.
+
+216. If your group had to choose one type of macramé project, what would it be?
+
+217. Create a new type of spring drink that everyone would enjoy.
+
+218. If you had to design a new type of fitness tracker, what would it include?
+
+219. Plan a perfect group pottery class that everyone takes.
+
+220. If your group had to choose one type of quilting pattern, what would it be?
+
+221. Design a perfect group ritual that everyone practices.
+
+222. If you had to create a new type of energy bite, what would it contain?
+
+223. Plan a perfect group photography class that everyone joins.
+
+224. If your group had to choose one type of jewelry making, what would it be?
