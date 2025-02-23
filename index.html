@@ -183,7 +183,6 @@
       function startPrompts() {
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("promptContainer").style.display = "block";
-        currentPromptIndex = (currentPromptIndex + 1) % prompts.length;
         savePromptIndex(currentPromptIndex);
         startPromptSession();
       }
