@@ -120,7 +120,8 @@
 
       // ✅ Global Variables
       let prompts = [];
-      let currentPromptIndex = 0;
+      // The cloud value always points to the next prompt that has not been shown.
+      let nextUnusedPromptIndex = 0;
       let countdown;
       let ready = false;
       let saving = false;
@@ -135,9 +136,9 @@
 
       function updateButtons() {
         document.getElementById("firstPromptButton").disabled =
-          !ready || saving || sessionStarted;
+          !ready || saving || sessionStarted || nextUnusedPromptIndex >= prompts.length;
         document.getElementById("nextButton").disabled =
-          !ready || saving || !sessionStarted;
+          !ready || saving || !sessionStarted || nextUnusedPromptIndex >= prompts.length;
       }
 
       const firebaseConfig = {
@@ -185,12 +186,12 @@
             .filter((line) => line);
           if (prompts.length === 0) throw new Error("No prompts found.");
 
-          currentPromptIndex = await loadPromptIndex();
-          if (!Number.isInteger(currentPromptIndex) ||
-              currentPromptIndex < 0 || currentPromptIndex >= prompts.length) {
+          nextUnusedPromptIndex = await loadPromptIndex();
+          if (!Number.isInteger(nextUnusedPromptIndex) ||
+              nextUnusedPromptIndex < 0 || nextUnusedPromptIndex > prompts.length) {
             throw new Error("The saved prompt position is invalid for this prompt list.");
           }
-          console.log("✅ Using saved prompt index:", currentPromptIndex);
+          console.log("✅ Using saved prompt index:", nextUnusedPromptIndex);
         } catch (error) {
           console.error("❌ Error loading prompts:", error);
           throw error;
@@ -203,7 +204,7 @@
       }
 
       async function saveAndShowPrompt(index, starting) {
-        if (!ready || saving || starting === sessionStarted) return;
+        if (!ready || saving || starting === sessionStarted || index >= prompts.length) return;
         saving = true;
         updateButtons();
         setStatus("Saving prompt position… Please wait.");
@@ -213,13 +214,14 @@
             "Please keep this page open; the next prompt will appear once saving succeeds.", true);
         }, 10000);
         try {
-          await savePromptIndex(index);
-          currentPromptIndex = index;
+          // Reserve this prompt before showing it so a new session starts with the next one.
+          await savePromptIndex(index + 1);
+          nextUnusedPromptIndex = index + 1;
           sessionStarted = true;
           document.getElementById("startScreen").style.display = "none";
           document.getElementById("promptContainer").style.display = "block";
-          startPromptSession();
-          setStatus("");
+          startPromptSession(index);
+          setStatus(nextUnusedPromptIndex === prompts.length ? "All prompts used." : "");
         } catch (error) {
           console.error("Error saving prompt position:", error);
           setStatus("Could not save the prompt position. No new prompt has been shown. " +
@@ -233,20 +235,20 @@
       }
 
       function startPrompts() {
-        return saveAndShowPrompt(currentPromptIndex, true);
+        return saveAndShowPrompt(nextUnusedPromptIndex, true);
       }
 
-      function startPromptSession() {
+      function startPromptSession(index) {
         if (prompts.length > 0) {
           document.getElementById("prompt").textContent =
-            prompts[currentPromptIndex];
+            prompts[index];
           document.getElementById("timer").style.display = "block";
           startTimer(360);
         }
       }
 
       function nextPrompt() {
-        return saveAndShowPrompt((currentPromptIndex + 1) % prompts.length, false);
+        return saveAndShowPrompt(nextUnusedPromptIndex, false);
       }
 
       function startTimer(duration) {
@@ -274,7 +276,7 @@
           await loadPassage();
           await loadPrompts();
           ready = true;
-          setStatus("");
+          setStatus(nextUnusedPromptIndex === prompts.length ? "All prompts used." : "");
         } catch (error) {
           console.error("Error preparing the session:", error);
           setStatus("Could not load the passage, prompts, or saved prompt position. " +
