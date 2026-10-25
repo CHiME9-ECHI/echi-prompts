@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -56,6 +56,18 @@
       #nextButton:hover {
         background-color: #0056b3;
       }
+      button:disabled {
+        opacity: 0.6;
+        cursor: wait;
+      }
+      #sessionStatus {
+        margin-top: 20px;
+        color: #444;
+      }
+      #sessionStatus.error {
+        color: #b00020;
+        font-weight: bold;
+      }
       #prompt {
         font-size: 1.5em;
         margin-bottom: 20px;
@@ -82,7 +94,7 @@
         <p>
           When you're ready, click the button below to see the first prompt.
         </p>
-        <button id="firstPromptButton" onclick="startPrompts()">
+        <button id="firstPromptButton" onclick="startPrompts()" disabled>
           Show First Prompt
         </button>
       </div>
@@ -90,8 +102,11 @@
       <div id="promptContainer">
         <p id="prompt">Press "Show First Prompt" to start.</p>
         <p id="timer">06:00</p>
-        <button id="nextButton" onclick="nextPrompt()">Show Next Prompt</button>
+        <button id="nextButton" onclick="nextPrompt()" disabled>Show Next Prompt</button>
       </div>
+      <p id="sessionStatus" role="status" aria-live="polite">
+        Loading prompts and saved position. If this message remains, check your connection and reload the page.
+      </p>
     </div>
 
     <script type="module">
@@ -107,6 +122,23 @@
       let prompts = [];
       let currentPromptIndex = 0;
       let countdown;
+      let ready = false;
+      let saving = false;
+      let sessionStarted = false;
+      let db;
+
+      function setStatus(message, isError = false) {
+        const status = document.getElementById("sessionStatus");
+        status.textContent = message;
+        status.className = isError ? "error" : "";
+      }
+
+      function updateButtons() {
+        document.getElementById("firstPromptButton").disabled =
+          !ready || saving || sessionStarted;
+        document.getElementById("nextButton").disabled =
+          !ready || saving || !sessionStarted;
+      }
 
       const firebaseConfig = {
         apiKey: "AIzaSyAHicQSrOLtnRDxUiWI_VSuEQvLdh-QtPs",
@@ -119,26 +151,13 @@
         appId: "1:519393914993:web:19b3405da27e7352ac2bd0",
       };
 
-      const app = initializeApp(firebaseConfig);
-      const db = getDatabase(app);
-      console.log("✅ Firebase initialized and database ready!");
-
       async function loadPromptIndex() {
-        try {
-          const snapshot = await get(ref(db, "users/guest/promptIndex"));
-          return snapshot.exists() ? snapshot.val() : 0;
-        } catch (error) {
-          console.error("❌ Firebase Database Error:", error);
-          return 0;
-        }
+        const snapshot = await get(ref(db, "users/guest/promptIndex"));
+        return snapshot.exists() ? snapshot.val() : 0;
       }
 
-      function savePromptIndex(index) {
-        set(ref(db, "users/guest/promptIndex"), index)
-          .then(() => console.log("✅ Saved prompt index:", index))
-          .catch((error) =>
-            console.error("❌ Error saving prompt index:", error)
-          );
+      function savePromptIndex(nextUnusedIndex) {
+        return set(ref(db, "users/guest/promptIndex"), nextUnusedIndex);
       }
 
       async function loadPassage() {
@@ -150,8 +169,8 @@
           document.getElementById("passage").style.display = "block";
         } catch (error) {
           console.error("❌ Error loading passage:", error);
-          document.getElementById("passageText").innerHTML =
-            "<p style='color:red;'>Error loading passage.</p>";
+          document.getElementById("passageText").textContent = "Error loading passage.";
+          throw error;
         }
       }
 
@@ -167,11 +186,14 @@
           if (prompts.length === 0) throw new Error("No prompts found.");
 
           currentPromptIndex = await loadPromptIndex();
+          if (!Number.isInteger(currentPromptIndex) ||
+              currentPromptIndex < 0 || currentPromptIndex >= prompts.length) {
+            throw new Error("The saved prompt position is invalid for this prompt list.");
+          }
           console.log("✅ Using saved prompt index:", currentPromptIndex);
         } catch (error) {
           console.error("❌ Error loading prompts:", error);
-          document.getElementById("prompt").textContent =
-            "Error loading prompts.";
+          throw error;
         }
       }
 
@@ -180,11 +202,38 @@
         document.getElementById("startScreen").style.display = "block";
       }
 
+      async function saveAndShowPrompt(index, starting) {
+        if (!ready || saving || starting === sessionStarted) return;
+        saving = true;
+        updateButtons();
+        setStatus("Saving prompt position… Please wait.");
+        // Keep controls locked if Firebase is still waiting for a connection.
+        const warning = setTimeout(() => {
+          setStatus("Saving is taking longer than expected. Check your connection. " +
+            "Please keep this page open; the next prompt will appear once saving succeeds.", true);
+        }, 10000);
+        try {
+          await savePromptIndex(index);
+          currentPromptIndex = index;
+          sessionStarted = true;
+          document.getElementById("startScreen").style.display = "none";
+          document.getElementById("promptContainer").style.display = "block";
+          startPromptSession();
+          setStatus("");
+        } catch (error) {
+          console.error("Error saving prompt position:", error);
+          setStatus("Could not save the prompt position. No new prompt has been shown. " +
+            "Check your connection or ask the experiment organiser to check database access, " +
+            "then click the prompt button to retry.", true);
+        } finally {
+          clearTimeout(warning);
+          saving = false;
+          updateButtons();
+        }
+      }
+
       function startPrompts() {
-        document.getElementById("startScreen").style.display = "none";
-        document.getElementById("promptContainer").style.display = "block";
-        savePromptIndex(currentPromptIndex);
-        startPromptSession();
+        return saveAndShowPrompt(currentPromptIndex, true);
       }
 
       function startPromptSession() {
@@ -197,11 +246,7 @@
       }
 
       function nextPrompt() {
-        currentPromptIndex = (currentPromptIndex + 1) % prompts.length;
-        document.getElementById("prompt").textContent =
-          prompts[currentPromptIndex];
-        savePromptIndex(currentPromptIndex);
-        startTimer(360);
+        return saveAndShowPrompt((currentPromptIndex + 1) % prompts.length, false);
       }
 
       function startTimer(duration) {
@@ -223,8 +268,21 @@
       }
 
       window.onload = async function () {
-        await loadPassage();
-        await loadPrompts();
+        try {
+          const app = initializeApp(firebaseConfig);
+          db = getDatabase(app);
+          await loadPassage();
+          await loadPrompts();
+          ready = true;
+          setStatus("");
+        } catch (error) {
+          console.error("Error preparing the session:", error);
+          setStatus("Could not load the passage, prompts, or saved prompt position. " +
+            "The session cannot start. Check your connection or ask the experiment organiser " +
+            "to check database access, then reload this page.", true);
+        } finally {
+          updateButtons();
+        }
       };
 
       window.showStartScreen = showStartScreen;
